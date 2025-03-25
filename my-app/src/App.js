@@ -1,160 +1,52 @@
-// Filename - App.js
+import React from 'react';
+import './index.css'; // Assuming you'll create a corresponding CSS file
 
-import React from "react";
-import "./App.css";
+const CommunityEats = () => {
+  return (
+    <div className="community-eats">
+      <header className="header">
+        <h1>COMMUNITY EATS</h1>
+        <nav className="navigation">
+          <a href="#recipe-library">Recipe Library</a>
+          <a href="#about-us">About Us</a>
+        </nav>
+      </header>
 
-function App() {
-    return (
-        <div>
-            <nav class="navbar background">
-                <ul class="nav-list">
-                    <div class="logo">
-                        <img src=
-"https://media.geeksforgeeks.org/wp-content/cdn-uploads/20210420155809/gfg-new-logo.png"
-                        />
-                    </div>
-                    <li>
-                        <a href="#courses">Courses</a>
-                    </li>
-                    <li>
-                        <a href="#tutorials">Tutorials</a>
-                    </li>
-                    <li>
-                        <a href="#jobs">Jobs</a>
-                    </li>
-                    <li>
-                        <a href="#student">Student</a>
-                    </li>
-                </ul>
+      <main className="main-content">
+        <section className="welcome-section">
+          <p>
+            Welcome to Community Eats - a space where food lovers come together to share, recreate, 
+            and reinvent their favorite recipes! As a member, you can upload your own culinary creations, 
+            discover new dishes, and get inspired by others in our vibrant food community. Whether you're 
+            an experienced cook or a beginner, everyone's welcome to join in the fun and explore a world 
+            of flavors. Let's cook, share, and eat!
+          </p>
+        </section>
 
-                <div class="rightNav">
-                    <input
-                        type="text"
-                        name="search"
-                        id="search"
-                    />
-                    <button class="btn btn-sm">
-                        Search
-                    </button>
-                </div>
-            </nav>
+        <hr className="divider" />
 
-            <section class="section">
-                <div class="box-main">
-                    <div class="firstHalf">
-                        <h1 class="text-big">
-                            7 Best Tips To Speed Up Your Job
-                            Search in 2022
-                        </h1>
-                        <p class="text-small">
-                            Hunting down a relevant job
-                            requires proper techniques for
-                            showcasing your potential to the
-                            employer. But with the advent of
-                            COVID-19, it has become a bit
-                            challenging and competitive to
-                            reach out for your dream job.
-                            Many individuals have lost their
-                            jobs during these times, and on
-                            the other hand, freshers are
-                            facing difficulties while
-                            applying for a new job. But
-                            there is no need for panic, you
-                            can change your ways and
-                            streamline things in a way that
-                            you get a proper result.
-                        </p>
-                    </div>
-                </div>
-            </section>
-            <section class="section">
-                <div class="box-main">
-                    <div class="secondHalf">
-                        <h1 class="text-big" id="program">
-                            JavaScript Tutorial
-                        </h1>
-                        <p class="text-small">
-                            JavaScript is the world most
-                            popular lightweight, interpreted
-                            compiled programming language.
-                            It is also known as scripting
-                            language for web pages. It is
-                            well-known for the development
-                            of web page many non-browser
-                            environments also use it.
-                            JavaScript can be used for
-                            Client-side developments as well
-                            as Server-side developments.
-                        </p>
-                    </div>
-                </div>
-            </section>
-            <section class="section">
-                <div class="box-main">
-                    <div class="secondHalf">
-                        <h1 class="text-big" id="program">
-                            Java Programming Language
-                        </h1>
-                        <p class="text-small">
-                            When compared with C++, Java
-                            codes are generally more
-                            maintainable because Java does
-                            not allow many things which may
-                            lead to bad/inefficient
-                            programming if used incorrectly.
-                            For example, non-primitives are
-                            always references in Java. So we
-                            cannot pass large objects (like
-                            we can do in C++) to functions,
-                            we always pass references in
-                            Java. One more example, since
-                            there are no pointers, bad
-                            memory access is also not
-                            possible. When compared with
-                            Python, Java kind of fits
-                            between C++ and Python. The
-                            programs are written in Java
-                            typically run faster than
-                            corresponding Python programs
-                            and slower than C++. Like C++,
-                            Java does static type checking,
-                            but Python does not.
-                        </p>
-                    </div>
-                </div>
-            </section>
-            <section class="section">
-                <div class="box-main">
-                    <div class="secondHalf">
-                        <h1 class="text-big" id="program">
-                            What is Machine Learning?
-                        </h1>
-                        <p class="text-small">
-                            Machine Learning is the field of
-                            study that gives computers the
-                            capability to learn without
-                            being explicitly programmed. ML
-                            is one of the most exciting
-                            technologies that one would have
-                            ever come across. As it is
-                            evident from the name, it gives
-                            the computer that makes it more
-                            similar to humans: The ability
-                            to learn. Machine learning is
-                            actively being used today,
-                            perhaps in many more places than
-                            one would expect.
-                        </p>
-                    </div>
-                </div>
-            </section>
-            <footer className="footer">
-                <p className="text-footer">
-                    Copyright ©-All rights are reserved
-                </p>
-            </footer>
-        </div>
-    );
-}
+        <section className="subscribe-section">
+          <h2>KEEP EATING!</h2>
+          <table className="subscribe-table">
+            <tbody>
+              <tr>
+                <td>SUBSCRIBE</td>
+                <td>
+                  <input type="email" placeholder="Email address" className="email-input" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </main>
 
-export default App;
+      <footer className="footer">
+        <p>© 2025, Community Eats</p>
+        <p>(810) 246 - 8357</p>
+        <p>1234 Michigan Avenue, Dearborn, MI 48124</p>
+      </footer>
+    </div>
+  );
+};
+
+export default CommunityEats;
