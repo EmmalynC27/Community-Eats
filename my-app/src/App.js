@@ -11,7 +11,7 @@ const CommunityEats = () => {
           <a href="#about-us">About Us</a>
         </nav>
       </header>
-
+        <p> Test changes </p>
       <main className="main-content">
         <section className="welcome-section">
           <p>
