@@ -1,37 +1,66 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import RecipeLibrary from './RecipeLibrary';
+import AboutUs from './AboutUs'; // Ensure the correct import
+import './index.css'; // Assuming you'll create a corresponding CSS file
 
-const App = () => {
+const CommunityEats = () => {
   return (
     <Router>
       <div className="community-eats">
         <header className="header">
           <h1>COMMUNITY EATS</h1>
           <nav className="navigation">
-            <Link to="/recipe-library">Recipe Library</Link>
-            <Link to="/about-us">About Us</Link>
+            <ul>
+              <li>
+                <Link to="/">Home</Link> {/* Link to Home page */}
+              </li>
+              <li>
+                <Link to="/about-us">About Us</Link> {/* Link to AboutUs page */}
+              </li>
+              <li>
+                <Link to="/recipe-library">Recipe Library</Link> {/* Placeholder Link */}
+              </li>
+            </ul>
           </nav>
         </header>
 
         <main className="main-content">
-          <section className="welcome-section">
-            <p>
-              Welcome to Community Eats - a space where food lovers come together to share, recreate, 
-              and reinvent their favorite recipes! As a member, you can upload your own culinary creations, 
-              discover new dishes, and get inspired by others in our vibrant food community.
-            </p>
-          </section>
+          <Routes>
+            <Route path="/" element={
+              <>
+                <section className="welcome-section">
+                  <p>
+                    Welcome to Community Eats - a space where food lovers come together to share, recreate, 
+                    and reinvent their favorite recipes! As a member, you can upload your own culinary creations, 
+                    discover new dishes, and get inspired by others in our vibrant food community. Whether you're 
+                    an experienced cook or a beginner, everyone's welcome to join in the fun and explore a world 
+                    of flavors. Let's cook, share, and eat!
+                  </p>
+                </section>
 
-          <hr className="divider" />
+                <hr className="divider" />
 
-          <section className="subscribe-section">
-            <h2>KEEP EATING!</h2>
-            <div className="subscribe-box">
-              <button className="subscribe-button">SUBSCRIBE</button>
-              <input type="email" placeholder="Email address" className="email-input" />
-            </div>
-          </section>
+                {/* Email Subscribe Section */}
+                <section className="subscribe-section">
+                  <h2>KEEP EATING!</h2>
+                  <table className="subscribe-table">
+                    <tbody>
+                      <tr>
+                        <td>SUBSCRIBE</td>
+                        <td>
+                          <input type="email" placeholder="Email address" className="email-input" />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </section>
+              </>
+            } />
+
+            <Route path="/about-us" element={<AboutUs />} />
+            {/* Placeholder route for Recipe Library */}
+            <Route path="/recipe-library" element={<div><h2>Recipe Library Placeholder</h2></div>} />
+          </Routes>
         </main>
 
         <footer className="footer">
@@ -39,13 +68,9 @@ const App = () => {
           <p>(810) 246 - 8357</p>
           <p>1234 Michigan Avenue, Dearborn, MI 48124</p>
         </footer>
-
-        <Routes>
-          <Route path="/recipe-library" element={<RecipeLibrary />} />
-        </Routes>
       </div>
     </Router>
   );
 };
 
-export default App;
+export default CommunityEats;
