@@ -1,0 +1,55 @@
+import React from 'react';
+import './index.css'; // Assuming you'll define styles in this file
+
+const RecipeLibrary = () => {
+  return (
+    <div className="recipe-library">
+      <header className="header">
+        <h1>COMMUNITY EATS</h1>
+        <nav className="navigation">
+          <a href="#recipe-library">Recipe Library</a>
+          <a href="#about-us">About Us</a>
+        </nav>
+      </header>
+
+      <main className="main-content">
+        <h2 className="section-title">Recipe Library</h2>
+
+        <section className="recipe-categories">
+          <div className="recipe-card">
+            <p>Plant Based</p>
+          </div>
+          <div className="recipe-card">
+            <p>Omnivore</p>
+          </div>
+          <div className="recipe-card">
+            <p>Special Diets</p>
+          </div>
+        </section>
+
+        <hr className="divider" />
+
+        <section className="subscribe-section">
+          <h2>KEEP EATING!</h2>
+          <div className="subscribe-box">
+            <button className="subscribe-button">SUBSCRIBE</button>
+            <input type="email" placeholder="Email address" className="email-input" />
+          </div>
+        </section>
+      </main>
+
+      <footer className="footer">
+        <div className="social-icons">
+          <span>FB</span>
+          <span>IG</span>
+          <span>Pinterest</span>
+        </div>
+        <p>© 2025, Community Eats</p>
+        <p>(810) 246 - 8357</p>
+        <p>1234 Michigan Avenue, Dearborn, MI 48124</p>
+      </footer>
+    </div>
+  );
+};
+
+export default RecipeLibrary;
