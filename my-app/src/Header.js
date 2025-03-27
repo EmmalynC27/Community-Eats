@@ -1,11 +1,4 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import RecipeLibrary from './RecipeLibrary';
-
-const App = () => {
-  return (
-    <Router>
-      <div className="community-eats">
+<div className="community-eats">
         <header className="header">
           <h1>COMMUNITY EATS</h1>
           <nav className="navigation">
@@ -44,8 +37,3 @@ const App = () => {
           <Route path="/recipe-library" element={<RecipeLibrary />} />
         </Routes>
       </div>
-    </Router>
-  );
-};
-
-export default App;
