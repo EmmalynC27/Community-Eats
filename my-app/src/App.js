@@ -22,6 +22,7 @@ const CommunityEats = () => {
               </li>
             </ul>
           </nav>
+          <hr className="divider" />
         </header>
 
         <main className="main-content">
