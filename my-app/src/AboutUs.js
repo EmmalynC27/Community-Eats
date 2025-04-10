@@ -1,24 +1,48 @@
 import React from 'react';
-import './index.css'; // Assuming you'll create a corresponding CSS file
+import './StyleAboutUs.css'; // Assuming you'll create a corresponding CSS file
+import { BrowserRouter as Router, Route, Routes, Navigate, Link } from 'react-router-dom';
+import './index.css';
+import FilterMenu from './FilterMenu';
+import LoginPage from './LoginPage';
+import { useAuth } from './AuthContext'; // Make sure you have this context
+import './fonts.css';
 
 const AboutUs = () => {
   return (
     <div className="about-us">
       <header className="header">
-        <h1>ABOUT COMMUNITY EATS</h1>
-      </header>
+                  <h1>COMMUNITY EATS</h1>
+                  <nav className="navigation">
+                    <ul>
+                      <li><Link to="/home">Home</Link></li>
+                      <li><Link to="/about-us">About Us</Link></li>
+                      <li><Link to="/recipe-library">Recipe Library</Link></li>
+                    </ul>
+                  </nav>
+                  <hr className="divider" />
+                </header>
+      
 
-      <main className="main-content">
-        <section className="about-us-section">
-          <p>
-            Community Eats is a space where food lovers come together to share, recreate, and reinvent their favorite recipes. 
-            As a member, you can upload your culinary creations, discover new dishes, and get inspired by others in our vibrant food community. 
-            Whether you're an experienced cook or a beginner, everyone's welcome to join in the fun and explore a world of flavors.
-          </p>
-          <p>
-            Our headquarters are located at 1234 Michigan Avenue, Dearborn, MI 48124, but our community exists worldwide, accessible to anyone who loves food!
-          </p>
-        </section>
+      <main className="about-us-section">
+        <div className="about-us-image">
+          <img src="/images/about-us-image.png" alt="Tacos on a plate." className="about-us-image"/>
+        </div>
+          <div className="about-us-text">
+            <h1 className="title">About Us</h1>     
+            <p>
+              At Community Eats, we're passionate about bringing people together through the love of food. Our platform is designed to connect home cooks,
+               food enthusiasts, and chefs of all skill levels to share recipes and experiment with new ideas.
+            </p>
+            <p>
+              We believe that food is more
+              than just sustenance—it’s a way to build community, celebrate cultures, and create lasting memories.
+              Community Eats is here to make cooking and connecting easier and more enjoyable for everyone.
+            </p>
+            <p>
+              Our headquarters is located at 1234 Michigan Avenue, Dearborn, MI 48124, but our community exists worldwide - accessible to anyone who loves food!
+            </p>
+          </div>
+        </main>
 
         <hr className="divider" />
 
@@ -36,7 +60,7 @@ const AboutUs = () => {
             </tbody>
           </table>
         </section>
-      </main>
+   
 
       <footer className="footer">
         
