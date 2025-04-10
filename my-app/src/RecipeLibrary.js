@@ -1,16 +1,27 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, Link } from 'react-router-dom';
+import './index.css';
+import FilterMenu from './FilterMenu';
+import LoginPage from './LoginPage';
+import { useAuth } from './AuthContext'; // Make sure you have this context
+import './fonts.css';
+import styles from './StyleRecipeLibrary.css';
 
 const RecipeLibrary = () => {
   return (
     <div className="recipe-library">
       <header className="header">
-        <h1>COMMUNITY EATS</h1>
-        <nav className="navigation">
-          <Link to="/">Home</Link>
-          <Link to="/about-us">About Us</Link>
-        </nav>
-      </header>
+                  <h1>COMMUNITY EATS</h1>
+                  <nav className="navigation">
+                    <ul>
+                      <li><Link to="/home">Home</Link></li>
+                      <li><Link to="/about-us">About Us</Link></li>
+                      <li><Link to="/recipe-library">Recipe Library</Link></li>
+                    </ul>
+                  </nav>
+                  <hr className="divider" />
+                </header>
 
       <main className="main-content">
         <h2 className="section-title">Recipe Library</h2>
