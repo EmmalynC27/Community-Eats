@@ -2,8 +2,16 @@ import React, { useState } from 'react';
 
 // Hard-coded sample data (not database)
 const allRecipes = [
-  { title: 'Classic American Burger', cuisine: 'American' },
-  { title: 'Chicken Teriyaki', cuisine: 'Asian' },
+  { 
+    title: 'Classic American Burger', 
+    cuisine: 'American', 
+    image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1365&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+  },
+  { 
+    title: 'Chicken Teriyaki', 
+    cuisine: 'Asian', 
+    image: 'https://images.unsplash.com/photo-1609183480237-ccbb2d7c5772?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+  },
   { title: 'Margherita Pizza', cuisine: 'Italian' },
   { title: 'Greek Salad', cuisine: 'Mediterranean' },
   { title: 'BBQ Ribs', cuisine: 'American' },
@@ -15,7 +23,7 @@ const allRecipes = [
 function FilterMenu() {
   const [selectedCuisine, setSelectedCuisine] = useState('All');
 
-  // Not sure if this is the best way (went with true or false logic)
+  // Filter the recipes based on the selected cuisine
   const filteredRecipes =
     selectedCuisine === 'All'
       ? allRecipes
@@ -49,12 +57,7 @@ function FilterMenu() {
 
           {/* Mediterranean */}
           <li onClick={() => setSelectedCuisine('Mediterranean')} style={{ marginBottom: '0.5rem', cursor: 'pointer' }}>
-            <input
-              type="radio"
-              checked={selectedCuisine === 'Mediterranean'}
-              readOnly
-            />{' '}
-            Mediterranean
+            <input type="radio" checked={selectedCuisine === 'Mediterranean'} readOnly /> Mediterranean
           </li>
         </ul>
       </div>
@@ -64,8 +67,7 @@ function FilterMenu() {
         <h2>
           {selectedCuisine === 'All'
             ? 'All Recipes'
-            : `${selectedCuisine} Recipes`
-          }
+            : `${selectedCuisine} Recipes`}
         </h2>
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
           {filteredRecipes.map((recipe, index) => (
@@ -75,11 +77,18 @@ function FilterMenu() {
                 border: '1px solid #ccc',
                 padding: '1rem',
                 width: '150px',
-                textAlign: 'left'
+                textAlign: 'center'
               }}
             >
-              <h4>{recipe.title}</h4>
-              <p>{recipe.cuisine}</p>
+              {recipe.image && (
+                <img
+                  src={recipe.image}
+                  alt={recipe.title}
+                  style={{ width: '100%', height: 'auto', display: 'block' }}
+                />
+              )}
+              <h4 style={{ margin: '0.5rem 0' }}>{recipe.title}</h4>
+              <p style={{ margin: 0 }}>{recipe.cuisine}</p>
             </div>
           ))}
         </div>
