@@ -28,6 +28,24 @@
   color: #61dafb;
 }
 
+.google-sign-in {
+  background-color: #4285F4;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.google-sign-in:hover {
+  background-color: #357ABD;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
