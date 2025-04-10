@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import AboutUs from './AboutUs'; // Ensure the correct import
 import './index.css'; // Assuming you'll create a corresponding CSS file
+import FilterMenu from './FilterMenu'; // Import the full FilterMenu component
 
 const CommunityEats = () => {
   return (
@@ -59,8 +60,8 @@ const CommunityEats = () => {
             } />
 
             <Route path="/about-us" element={<AboutUs />} />
-            {/* Placeholder route for Recipe Library */}
-            <Route path="/recipe-library" element={<div><h2>Recipe Library Placeholder</h2></div>} />
+            {/* Placeholder route for Recipe Library / This is the filtermenu */}
+            <Route path="/recipe-library" element={<FilterMenu />} />
           </Routes>
         </main>
 

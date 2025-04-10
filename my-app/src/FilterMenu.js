@@ -1,57 +1,73 @@
-import React, { useState } from 'React'; //usestate is so that the default state of filters are all or nothing.
+import React, { useState } from 'react';
+
+// Hard-coded sample data (not database)
+const allRecipes = [
+  { title: 'Classic American Burger', cuisine: 'American' },
+  { title: 'Chicken Teriyaki', cuisine: 'Asian' },
+  { title: 'Margherita Pizza', cuisine: 'Italian' },
+  { title: 'Greek Salad', cuisine: 'Mediterranean' },
+  { title: 'BBQ Ribs', cuisine: 'American' },
+  { title: 'Sushi Platter', cuisine: 'Asian' },
+  { title: 'Pasta Carbonara', cuisine: 'Italian' },
+  { title: 'Falafel Wrap', cuisine: 'Mediterranean' }
+];
 
 function FilterMenu() {
-// currently selected filter
-const [selectedCuisine, setSelectedCuisine] = useState('All');
+  const [selectedCuisine, setSelectedCuisine] = useState('All');
 
-//array of cuisines type
-const cuisines = ['American', 'Asian', 'Italian', 'Mediterranian'];
-
-
-const filteredRecipes =
-// decleration of filtered recipe that should hold the array once you select a specific recipe
-selectedCuisine === 'All'
-  ? allRecipes //should theoritically makes it so that the condition of filtered recipe is true
-  : allRecipes.filter(recipe => recipe.cuisine === selectedCuisine); 
-
+  // Not sure if this is the best way (went with true or false logic)
+  const filteredRecipes =
+    selectedCuisine === 'All'
+      ? allRecipes
+      : allRecipes.filter(recipe => recipe.cuisine === selectedCuisine);
 
   return (
-    <div style={{ display: 'flex' }}>
-      {/* Sidebar for filters */}
-      <div className="sidebar" style={{ width: '200px', padding: '1rem' }}>
+    <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+      {/* Sidebar for filter options */}
+      <div style={{ width: '200px', padding: '1rem', borderRight: '1px solid #ccc' }}>
         <h3>Filter</h3>
         <ul style={{ listStyle: 'none', padding: 0 }}>
-          {/* "All" option */}
-          <li onClick={() => setSelectedCuisine('All')}>
+          {/* Option "All" */}
+          <li onClick={() => setSelectedCuisine('All')} style={{ marginBottom: '0.5rem', cursor: 'pointer' }}>
+            <input type="radio" checked={selectedCuisine === 'All'} readOnly /> All
+          </li>
+
+          {/* American */}
+          <li onClick={() => setSelectedCuisine('American')} style={{ marginBottom: '0.5rem', cursor: 'pointer' }}>
+            <input type="radio" checked={selectedCuisine === 'American'} readOnly /> American
+          </li>
+
+          {/* Asian */}
+          <li onClick={() => setSelectedCuisine('Asian')} style={{ marginBottom: '0.5rem', cursor: 'pointer' }}>
+            <input type="radio" checked={selectedCuisine === 'Asian'} readOnly /> Asian
+          </li>
+
+          {/* Italian */}
+          <li onClick={() => setSelectedCuisine('Italian')} style={{ marginBottom: '0.5rem', cursor: 'pointer' }}>
+            <input type="radio" checked={selectedCuisine === 'Italian'} readOnly /> Italian
+          </li>
+
+          {/* Mediterranean */}
+          <li onClick={() => setSelectedCuisine('Mediterranean')} style={{ marginBottom: '0.5rem', cursor: 'pointer' }}>
             <input
               type="radio"
-              checked={selectedCuisine === 'All'}
+              checked={selectedCuisine === 'Mediterranean'}
               readOnly
             />{' '}
-            All
+            Mediterranean
           </li>
-          {/* Each cuisine option */}
-          {cuisines.map(cuisine => (
-            <li key={cuisine} onClick={() => setSelectedCuisine(cuisine)}>
-              <input
-                type="radio"
-                checked={selectedCuisine === cuisine}
-                readOnly
-              />{' '}
-              {cuisine}
-            </li>
-          ))}
         </ul>
       </div>
 
-      {/* Main content area */}
-      <div className="main-content" style={{ flex: 1, padding: '1rem' }}>
+      {/* Main content area for displaying recipes */}
+      <div style={{ flex: 1, padding: '1rem' }}>
         <h2>
-          {selectedCuisine === 'All' ? 'All Recipes' : `${selectedCuisine} Recipes`}
+          {selectedCuisine === 'All'
+            ? 'All Recipes'
+            : `${selectedCuisine} Recipes`
+          }
         </h2>
-
-        {/* Display filtered recipes in a simple grid */}
-        <div className="recipes-grid" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
           {filteredRecipes.map((recipe, index) => (
             <div
               key={index}
@@ -72,3 +88,4 @@ selectedCuisine === 'All'
   );
 }
 
+export default FilterMenu;
