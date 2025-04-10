@@ -5,6 +5,8 @@ import './index.css';
 import FilterMenu from './FilterMenu';
 import LoginPage from './LoginPage';
 import { useAuth } from './AuthContext'; // Make sure you have this context
+import './fonts.css';
+import styles from './styles.css';
 
 const CommunityEats = () => {
   const { currentUser } = useAuth();
