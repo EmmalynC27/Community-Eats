@@ -36,7 +36,13 @@ const CommunityEats = () => {
 
                 <main className="main-content">
                   <section className="welcome-section">
-                    <p>Welcome to Community Eats...</p>
+                    <p>
+                    Welcome to Community Eats - a space where food lovers come together to share, 
+                    recreate, and reinvent their favorite recipes! As a member, you can upload your 
+                    own culinary creations, discover new dishes, and get inspired by others in our 
+                    vibrant food community. Whether you're an experienced cook or a beginner, everyone’s 
+                    welcome to join in the fun and explore a world of flavors. Let's cook, share, and eat!
+                    </p>
                   </section>
                   <hr className="divider" />
                   <section className="subscribe-section">
