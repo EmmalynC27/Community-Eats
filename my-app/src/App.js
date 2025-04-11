@@ -4,7 +4,7 @@ import AboutUs from './AboutUs';
 import './index.css';
 import FilterMenu from './FilterMenu';
 import LoginPage from './LoginPage';
-import { useAuth } from './AuthContext'; // Make sure you have this context
+import { useAuth } from './AuthContext'; 
 import './fonts.css';
 import styles from './styles.css';
 
