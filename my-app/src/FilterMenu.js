@@ -93,6 +93,14 @@ function FilterMenu() {
           ))}
         </div>
       </div>
+      <div class="subscribe-footer">
+    <h2>KEEP EATING!</h2>
+    <label>SUBSCRIBE</label>
+    <input type="email" placeholder="Email address" />
+    <p>© 2025, Community Eats</p>
+    <p>(810) 246 - 8357</p>
+    <p>1234 Michigan Avenue, Dearborn, MI 48124</p>
+  </div>
     </div>
   );
 }

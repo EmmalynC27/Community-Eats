@@ -61,10 +61,12 @@ const AboutUs = () => {
           </table>
         </section>
    
-
       <footer className="footer">
-        
+        <p>© 2025, Community Eats</p>
+        <p>(810) 246 - 8357</p>
+        <p>1234 Michigan Avenue, Dearborn, MI 48124</p>
       </footer>
+     
     </div>
   );
 };
