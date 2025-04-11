@@ -4,6 +4,7 @@ import AboutUs from './AboutUs';
 import './index.css';
 import FilterMenu from './FilterMenu';
 import LoginPage from './LoginPage';
+import CreateRecipe from './CreateRecipe'; // Import the new CreateRecipe component
 import { useAuth } from './AuthContext'; 
 import './fonts.css';
 import styles from './styles.css';
@@ -23,14 +24,29 @@ const CommunityEats = () => {
             currentUser ? (
               <>
                 <header className="header">
-                  <h1>COMMUNITY EATS</h1>
-                  <nav className="navigation">
-                    <ul>
-                      <li><Link to="/home">Home</Link></li>
-                      <li><Link to="/about-us">About Us</Link></li>
-                      <li><Link to="/recipe-library">Recipe Library</Link></li>
-                    </ul>
-                  </nav>
+                  <div className="header-content">
+                    <h1>COMMUNITY EATS</h1>
+                    <nav className="navigation">
+                      <ul>
+                        <li><Link to="/home">Home</Link></li>
+                        <li><Link to="/create-recipe">Create Recipe</Link></li>
+                        <li><Link to="/about-us">About Us</Link></li>
+                        <li><Link to="/recipe-library">Recipe Library</Link></li>
+                      </ul>
+                    </nav>
+                    {currentUser && (
+                      <div className="user-info">
+                        <span className="user-name">
+                          {currentUser.displayName || currentUser.email.split('@')[0]}
+                        </span>
+                        <img 
+                          src={currentUser.photoURL || '/default-user.png'} 
+                          alt="User profile" 
+                          className="user-avatar"
+                        />
+                      </div>
+                    )}
+                  </div>
                   <hr className="divider" />
                 </header>
 
@@ -65,6 +81,12 @@ const CommunityEats = () => {
             )
           } />
 
+          {/* Add the new Create Recipe route */}
+          <Route 
+            path="/create-recipe" 
+            element={currentUser ? <CreateRecipe /> : <Navigate to="/login" replace />} 
+          />
+          
           <Route path="/about-us" element={currentUser ? <AboutUs /> : <Navigate to="/login" replace />} />
           <Route path="/recipe-library" element={currentUser ? <FilterMenu /> : <Navigate to="/login" replace />} />
           
