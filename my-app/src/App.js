@@ -8,6 +8,8 @@ import CreateRecipe from './CreateRecipe'; // Import the new CreateRecipe compon
 import { useAuth } from './AuthContext'; 
 import './fonts.css';
 import styles from './styles.css';
+import Profile from './Profile'; // Add this at the top with your other imports
+
 
 const CommunityEats = () => {
   const { currentUser } = useAuth();
@@ -32,6 +34,7 @@ const CommunityEats = () => {
                         <li><Link to="/create-recipe">Create Recipe</Link></li>
                         <li><Link to="/about-us">About Us</Link></li>
                         <li><Link to="/recipe-library">Recipe Library</Link></li>
+                        <li><Link to="/profile">Profile</Link></li>
                       </ul>
                     </nav>
                     {currentUser && (
@@ -101,6 +104,8 @@ const CommunityEats = () => {
           
           {/* Redirect any other path to login */}
           <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="/profile" element={currentUser ? <Profile /> : <Navigate to="/login" replace />} />
+
         </Routes>
       </div>
     </Router>
