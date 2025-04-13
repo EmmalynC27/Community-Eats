@@ -1,305 +1,217 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { ref, push, set } from "firebase/database";
-import { useAuth } from "./AuthContext";
-import { db } from "./firebaseConfig"; // Fixed import
+import React, { useState } from 'react';
+import { db } from './firebaseConfig';
+import { collection, addDoc } from 'firebase/firestore';
 
-export default function CreateRecipe() {
-  const { currentUser } = useAuth();
-  const [ingredientCount, setIngredientCount] = useState(1);
-  const [stepCount, setStepCount] = useState(1);
-  const [successMessage, setSuccessMessage] = useState(null);
+const CreateRecipe = () => {
+  // Basic text fields
+  const [recipeName, setRecipeName] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
 
-  const { register, handleSubmit, formState: { errors }, reset } = useForm();
+  // Arrays for dynamic ingredients & steps
+  const [ingredients, setIngredients] = useState(['']);
+  const [steps, setSteps] = useState(['']);
 
-  const addIngredient = () => {
-    if (ingredientCount < 10) {
-      setIngredientCount(ingredientCount + 1);
-    }
+  // Separate fields for cuisineType and foodType
+  const [cuisineType, setCuisineType] = useState('');
+  const [foodType, setFoodType] = useState('');
+
+  // Optional: diet (omnivore/herbivore)
+  const [diet, setDiet] = useState('omnivore');
+
+  // Add more ingredient fields dynamically
+  const handleAddIngredient = () => {
+    setIngredients([...ingredients, '']);
+  };
+  const handleIngredientChange = (index, value) => {
+    const updated = [...ingredients];
+    updated[index] = value;
+    setIngredients(updated);
   };
 
-  const removeIngredient = () => {
-    if (ingredientCount > 1) {
-      setIngredientCount(ingredientCount - 1);
-    }
+  // Add more step fields dynamically
+  const handleAddStep = () => {
+    setSteps([...steps, '']);
+  };
+  const handleStepChange = (index, value) => {
+    const updated = [...steps];
+    updated[index] = value;
+    setSteps(updated);
   };
 
-  const addStep = () => {
-    if (stepCount < 10) {
-      setStepCount(stepCount + 1);
+  // Submit the new recipe to Firestore
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!recipeName.trim()) {
+      alert('Recipe name is required!');
+      return;
     }
-  };
-
-  const removeStep = () => {
-    if (stepCount > 1) {
-      setStepCount(stepCount - 1);
-    }
-  };
-
-  const onSubmit = async (data) => {
-    const ingredients = [];
-    for (let i = 0; i < ingredientCount; i++) {
-      if (data[`ingredient${i}`]) {
-        ingredients.push(data[`ingredient${i}`]);
-      }
-    }
-
-    const steps = [];
-    for (let i = 0; i < stepCount; i++) {
-      if (data[`step${i}`]) {
-        steps.push(data[`step${i}`]);
-      }
-    }
-
-    const recipeData = {
-      name: data.recipeName,
-      ingredients,
-      steps,
-      imageUrl: data.imageUrl || "",
-      createdAt: new Date().toISOString(),
-      createdBy: {
-        uid: currentUser.uid,
-        name: currentUser.displayName || currentUser.email
-      }
-    };
 
     try {
-      const recipesRef = ref(db, 'recipes');
-      const newRecipeRef = push(recipesRef);
-      await set(newRecipeRef, recipeData);
+      await addDoc(collection(db, 'recipes'), {
+        name: recipeName,
+        imageUrl: imageUrl || '',
+        ingredients: ingredients.filter((ing) => ing.trim() !== ''),
+        steps: steps.filter((st) => st.trim() !== ''),
+        cuisineType: cuisineType || 'Unspecified',
+        foodType: foodType || 'Unspecified',
+        diet: diet, // "omnivore" or "herbivore"
+      });
 
-      setSuccessMessage("Recipe submitted successfully!");
-      reset();
-      setIngredientCount(1);
-      setStepCount(1);
-      
-      setTimeout(() => setSuccessMessage(null), 3000);
+      // Reset form (optional)
+      setRecipeName('');
+      setImageUrl('');
+      setIngredients(['']);
+      setSteps(['']);
+      setCuisineType('');
+      setFoodType('');
+      setDiet('omnivore');
+      alert('Recipe created successfully!');
     } catch (error) {
-      console.error("Error submitting recipe:", error);
-      alert("Error submitting recipe. Please try again.");
+      console.error('Error creating recipe:', error);
+      alert('Failed to create recipe. See console for details.');
     }
   };
 
   return (
-    <div style={styles.container}>
-      {currentUser && (
-        <div style={styles.userProfile}>
-          {currentUser.photoURL && (
-            <img 
-              src={currentUser.photoURL} 
-              alt="Profile" 
-              style={styles.profilePic} 
-            />
-          )}
-          <span style={styles.userName}>
-            {currentUser.displayName || currentUser.email}
-          </span>
-        </div>
-      )}
-      
-      {successMessage && (
-        <div style={styles.successMessage}>
-          {successMessage}
-        </div>
-      )}
-
-      <h1 style={styles.title}>Add New Recipe</h1>
-
-      <form onSubmit={handleSubmit(onSubmit)} style={styles.form}>
+    <div style={{ maxWidth: '600px', margin: 'auto' }}>
+      <h1>Add New Recipe</h1>
+      <form onSubmit={handleSubmit}>
         {/* Recipe Name */}
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Recipe Name*</label>
-          <input
-            {...register("recipeName", { required: "Recipe name is required" })}
-            placeholder="Enter recipe name"
-            style={styles.input}
-          />
-          {errors.recipeName && <span style={styles.error}>{errors.recipeName.message}</span>}
-        </div>
+        <label>Recipe Name*</label>
+        <input
+          type="text"
+          value={recipeName}
+          onChange={(e) => setRecipeName(e.target.value)}
+          required
+          style={{ width: '100%', marginBottom: '10px' }}
+        />
 
         {/* Image URL */}
-        <div style={styles.formGroup}>
-          <label style={styles.label}>Image URL</label>
-          <input
-            {...register("imageUrl")}
-            placeholder="Enter image URL (optional)"
-            style={styles.input}
-          />
-        </div>
+        <label>Image URL</label>
+        <input
+          type="text"
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          style={{ width: '100%', marginBottom: '10px' }}
+        />
 
-        {/* Ingredients */}
-        <div style={styles.formGroup}>
-          <div style={styles.sectionHeader}>
-            <label style={styles.label}>Ingredients*</label>
-            <div style={styles.buttonGroup}>
-              <button 
-                type="button" 
-                onClick={removeIngredient}
-                style={styles.smallButton}
-                disabled={ingredientCount <= 1}
-              >
-                -
-              </button>
-              <button 
-                type="button" 
-                onClick={addIngredient}
-                style={styles.smallButton}
-                disabled={ingredientCount >= 10}
+        {/* Ingredients (dynamic) */}
+        <label>Ingredients*</label>
+        {ingredients.map((ing, idx) => (
+          <div
+            key={idx}
+            style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}
+          >
+            <input
+              type="text"
+              value={ing}
+              onChange={(e) => handleIngredientChange(idx, e.target.value)}
+              style={{ flex: '1' }}
+            />
+            {/* Button to add more fields (only on last row) */}
+            {idx === ingredients.length - 1 && (
+              <button
+                type="button"
+                onClick={handleAddIngredient}
+                style={{ marginLeft: '5px' }}
               >
                 +
               </button>
-            </div>
+            )}
           </div>
-          
-          {Array.from({ length: ingredientCount }).map((_, index) => (
-            <div key={index} style={styles.dynamicField}>
-              <input
-                {...register(`ingredient${index}`, { required: index === 0 ? "At least one ingredient is required" : false })}
-                placeholder={`Ingredient ${index + 1}`}
-                style={styles.input}
-              />
-              {errors[`ingredient${index}`] && <span style={styles.error}>{errors[`ingredient${index}`].message}</span>}
-            </div>
-          ))}
-        </div>
+        ))}
 
-        {/* Steps */}
-        <div style={styles.formGroup}>
-          <div style={styles.sectionHeader}>
-            <label style={styles.label}>Steps*</label>
-            <div style={styles.buttonGroup}>
-              <button 
-                type="button" 
-                onClick={removeStep}
-                style={styles.smallButton}
-                disabled={stepCount <= 1}
-              >
-                -
-              </button>
-              <button 
-                type="button" 
-                onClick={addStep}
-                style={styles.smallButton}
-                disabled={stepCount >= 10}
+        {/* Steps (dynamic) */}
+        <label>Steps*</label>
+        {steps.map((step, idx) => (
+          <div
+            key={idx}
+            style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}
+          >
+            <input
+              type="text"
+              value={step}
+              onChange={(e) => handleStepChange(idx, e.target.value)}
+              style={{ flex: '1' }}
+            />
+            {/* Button to add more fields (only on last row) */}
+            {idx === steps.length - 1 && (
+              <button
+                type="button"
+                onClick={handleAddStep}
+                style={{ marginLeft: '5px' }}
               >
                 +
               </button>
-            </div>
+            )}
           </div>
-          
-          {Array.from({ length: stepCount }).map((_, index) => (
-            <div key={index} style={styles.dynamicField}>
-              <textarea
-                {...register(`step${index}`, { required: index === 0 ? "At least one step is required" : false })}
-                placeholder={`Step ${index + 1}`}
-                style={{...styles.input, minHeight: '60px'}}
-                rows={3}
-              />
-              {errors[`step${index}`] && <span style={styles.error}>{errors[`step${index}`].message}</span>}
-            </div>
-          ))}
+        ))}
+
+        {/* Cuisine Type */}
+        <label>Cuisine Type</label>
+        <select
+          value={cuisineType}
+          onChange={(e) => setCuisineType(e.target.value)}
+          style={{ width: '100%', marginBottom: '10px' }}
+        >
+          <option value="">-- Select Cuisine --</option>
+          <option value="American">American</option>
+          <option value="Asian">Asian</option>
+          <option value="Italian">Italian</option>
+          <option value="Mediterranean">Mediterranean</option>
+          <option value="Mexican">Mexican</option>
+        </select>
+
+        {/* Food Type */}
+        <label>Food Type</label>
+        <select
+          value={foodType}
+          onChange={(e) => setFoodType(e.target.value)}
+          style={{ width: '100%', marginBottom: '10px' }}
+        >
+          <option value="">-- Select Food Type --</option>
+          <option value="Burgers">Burgers</option>
+          <option value="Pastas">Pastas</option>
+          <option value="Salads">Salads</option>
+          <option value="Steaks">Steaks</option>
+          <option value="Tacos">Tacos</option>
+        </select>
+
+        {/* Optional: Diet Radio Buttons */}
+        <label>Diet</label>
+        <div style={{ marginBottom: '10px' }}>
+          <label style={{ marginRight: '10px' }}>
+            <input
+              type="radio"
+              name="diet"
+              value="omnivore"
+              checked={diet === 'omnivore'}
+              onChange={(e) => setDiet(e.target.value)}
+            />
+            Omnivore
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="diet"
+              value="herbivore"
+              checked={diet === 'herbivore'}
+              onChange={(e) => setDiet(e.target.value)}
+            />
+            Herbivore
+          </label>
         </div>
 
-        <button type="submit" style={styles.submitButton}>
+        {/* Submit Button */}
+        <button
+          type="submit"
+          style={{ backgroundColor: 'orange', color: '#fff', padding: '10px 20px', border: 'none' }}
+        >
           Submit Recipe
         </button>
       </form>
     </div>
   );
-}
-
-const styles = {
-  container: {
-    padding: "2rem",
-    maxWidth: "800px",
-    margin: "auto",
-    position: "relative"
-  },
-  title: {
-    color: "#FF9800",
-    textAlign: "center",
-    marginBottom: "2rem"
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "1.5rem"
-  },
-  formGroup: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "0.5rem"
-  },
-  sectionHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
-  label: {
-    fontWeight: "bold",
-    marginBottom: "0.5rem"
-  },
-  input: {
-    padding: "0.8rem",
-    borderRadius: "8px",
-    border: "1px solid #ddd",
-    width: "100%",
-    boxSizing: "border-box"
-  },
-  dynamicField: {
-    marginBottom: "1rem"
-  },
-  buttonGroup: {
-    display: "flex",
-    gap: "0.5rem"
-  },
-  smallButton: {
-    width: "30px",
-    height: "30px",
-    borderRadius: "50%",
-    border: "1px solid #ddd",
-    background: "#f5f5f5",
-    cursor: "pointer",
-    fontSize: "1rem"
-  },
-  submitButton: {
-    background: "#FF9800",
-    color: "#fff",
-    padding: "12px",
-    border: "none",
-    borderRadius: "8px",
-    cursor: "pointer",
-    fontSize: "1rem",
-    marginTop: "1rem"
-  },
-  error: {
-    color: "red",
-    fontSize: "0.8rem"
-  },
-  successMessage: {
-    backgroundColor: "#4CAF50",
-    color: "white",
-    padding: "10px",
-    borderRadius: "4px",
-    marginBottom: "20px",
-    textAlign: "center"
-  },
-  userProfile: {
-    position: 'absolute',
-    top: '20px',
-    right: '20px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px'
-  },
-  profilePic: {
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
-    border: '2px solid #FF9800'
-  },
-  userName: {
-    fontWeight: 'bold',
-    color: '#333'
-  }
 };
+
+export default CreateRecipe;

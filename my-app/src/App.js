@@ -9,7 +9,7 @@ import { useAuth } from './AuthContext';
 import './fonts.css';
 import styles from './styles.css';
 import Profile from './Profile'; // Add this at the top with your other imports
-
+import RecipeDetails from './RecipeDetails'; // You will create this component
 
 const CommunityEats = () => {
   const { currentUser } = useAuth();
@@ -98,6 +98,12 @@ const CommunityEats = () => {
           
           <Route path="/about-us" element={currentUser ? <AboutUs /> : <Navigate to="/login" replace />} />
           <Route path="/recipe-library" element={currentUser ? <FilterMenu /> : <Navigate to="/login" replace />} />
+
+          {/* NEW: Single Recipe Details Page (protected) */}
+          <Route 
+            path="/recipe/:id" 
+            element={currentUser ? <RecipeDetails /> : <Navigate to="/login" replace />} 
+          />
           
           {/* Redirect root path to login */}
           <Route path="/" element={<Navigate to="/login" replace />} />
