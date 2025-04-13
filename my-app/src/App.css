@@ -127,3 +127,89 @@
   font-size: 18px;
   color: #999;
 }
+
+/*Profile page
+
+/* Container that holds text on the left and big photo on the right */
+.profile-content {
+  display: flex;
+  justify-content: space-between; /* text on far left, image on far right */
+  align-items: flex-start;        /* keep them aligned at the top */
+  gap: 40px;                      /* space between them */
+}
+
+.profile-heading {
+  font-family: 'Italiana', serif; 
+  font-size: 36px;
+  margin: 0 0 10px 0;
+}
+
+.profile-pic {
+  width: 300px; 
+  height: auto;
+  object-fit: cover;
+  /* No 'flex: 1' here, so it won't push it to center */
+}
+
+.profile-info {
+  /* If you need a set width or max-width, set it here, e.g.: */
+  /* max-width: 500px; */
+}
+
+
+.section-title {
+  font-family: 'Instrument Sans', sans-serif; /* or whichever font */
+  font-weight: 700;                          /* bold */
+  font-size: 26px;                           /* size as you like */
+  margin-bottom: 20px; /* same spacing as your inline style was doing */
+}
+
+/* 2) Force slick's default arrows to be black */
+.slick-prev:before,
+.slick-next:before {
+  color: black !important; /* override white default */
+  font-size: 30px;         /* optional to enlarge arrow icons */
+}
+
+/* 3) Overlay styling for the recipe images */
+.recipe-slide-container {
+  position: relative;
+  width: 100%;
+}
+
+.recipe-slide-image {
+  width: 100%;
+  height: 300px; /* or whatever size you want */
+  object-fit: cover;
+}
+
+.recipe-slide-overlay {
+  position: absolute;
+  bottom: 10px;       /* 10px from bottom */
+  left: 0;            
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
+}
+
+.recipe-overlay-left,
+.recipe-overlay-right {
+  display: flex;
+  align-items: center;
+}
+
+.recipe-overlay-text {
+  font-family: 'Instrument Sans', serif; 
+  font-weight: 700;              /* make it bold or semi-bold */
+  font-size: 24px;               /* bigger text */
+  color: #fff;                   /* white text */
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+.recipe-overlay-arrow {
+  font-size: 24px;
+  color: black; /* black arrows inside the image overlay */
+  margin: 0 8px;
+}

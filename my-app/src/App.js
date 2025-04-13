@@ -4,12 +4,12 @@ import AboutUs from './AboutUs';
 import './index.css';
 import FilterMenu from './FilterMenu';
 import LoginPage from './LoginPage';
-import CreateRecipe from './CreateRecipe'; // Import the new CreateRecipe component
+import CreateRecipe from './CreateRecipe'; 
 import { useAuth } from './AuthContext'; 
 import './fonts.css';
 import styles from './styles.css';
-import Profile from './Profile'; // Add this at the top with your other imports
-import RecipeDetails from './RecipeDetails'; // You will create this component
+import Profile from './Profile'; 
+import RecipeDetails from './RecipeDetails'; 
 
 const CommunityEats = () => {
   const { currentUser } = useAuth();
@@ -56,11 +56,11 @@ const CommunityEats = () => {
                 <main className="main-content">
                   <section className="welcome-section">
                     <p>
-                    Welcome to Community Eats - a space where food lovers come together to share, 
-                    recreate, and reinvent their favorite recipes! As a member, you can upload your 
-                    own culinary creations, discover new dishes, and get inspired by others in our 
-                    vibrant food community. Whether you're an experienced cook or a beginner, everyone’s 
-                    welcome to join in the fun and explore a world of flavors. Let's cook, share, and eat!
+                      Welcome to Community Eats - a space where food lovers come together to share, 
+                      recreate, and reinvent their favorite recipes! As a member, you can upload your 
+                      own culinary creations, discover new dishes, and get inspired by others in our 
+                      vibrant food community. Whether you're an experienced cook or a beginner, everyone’s 
+                      welcome to join in the fun and explore a world of flavors. Let's cook, share, and eat!
                     </p>
                   </section>
                   <hr className="divider" />
@@ -90,28 +90,41 @@ const CommunityEats = () => {
             )
           } />
 
-          {/* Add the new Create Recipe route */}
+          {/* Create Recipe route (protected) */}
           <Route 
             path="/create-recipe" 
             element={currentUser ? <CreateRecipe /> : <Navigate to="/login" replace />} 
           />
           
-          <Route path="/about-us" element={currentUser ? <AboutUs /> : <Navigate to="/login" replace />} />
-          <Route path="/recipe-library" element={currentUser ? <FilterMenu /> : <Navigate to="/login" replace />} />
+          {/* About Us route (protected) */}
+          <Route 
+            path="/about-us" 
+            element={currentUser ? <AboutUs /> : <Navigate to="/login" replace />} 
+          />
 
-          {/* NEW: Single Recipe Details Page (protected) */}
+          {/* Recipe Library route (protected) */}
+          <Route 
+            path="/recipe-library" 
+            element={currentUser ? <FilterMenu /> : <Navigate to="/login" replace />} 
+          />
+
+          {/* Single Recipe Details Page (protected) */}
           <Route 
             path="/recipe/:id" 
             element={currentUser ? <RecipeDetails /> : <Navigate to="/login" replace />} 
           />
-          
+
+          {/* Profile route (protected) */}
+          <Route 
+            path="/profile" 
+            element={currentUser ? <Profile /> : <Navigate to="/login" replace />}
+          />
+
           {/* Redirect root path to login */}
           <Route path="/" element={<Navigate to="/login" replace />} />
           
           {/* Redirect any other path to login */}
           <Route path="*" element={<Navigate to="/login" replace />} />
-          <Route path="/profile" element={currentUser ? <Profile /> : <Navigate to="/login" replace />} />
-
         </Routes>
       </div>
     </Router>

@@ -113,6 +113,7 @@ const FilterMenu = () => {
         <h1>COMMUNITY EATS</h1>
         <nav className="navigation">
           <ul>
+            <li><Link to="/home">Home</Link></li>
             <li><a href="/recipes">Recipe Library</a></li>
             <li><a href="/about">About Us</a></li>
           </ul>
