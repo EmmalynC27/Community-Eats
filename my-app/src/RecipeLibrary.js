@@ -1,38 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getDatabase, ref, onValue } from 'firebase/database'; // Realtime Database imports
-import { app } from './firebaseConfig'; // Import app from your config
-import './index.css';
-import { useAuth } from './AuthContext';
-import './fonts.css';
-import styles from './StyleRecipeLibrary.css';
+import { getDatabase, ref, onValue } from 'firebase/database';
+import { app } from './firebaseConfig';
+import './StyleRecipeLibrary.css'; // Make sure this filename matches exactly
 
 const RecipeLibrary = () => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Initialize Realtime Database
     const database = getDatabase(app);
     const recipesRef = ref(database, 'recipes');
-    
-    // Listen for value changes
+
     const unsubscribe = onValue(recipesRef, (snapshot) => {
-      const recipesData = snapshot.val();
-      if (recipesData) {
-        // Convert object to array
-        const recipesArray = Object.keys(recipesData).map(key => ({
+      const data = snapshot.val();
+      if (data) {
+        const array = Object.keys(data).map((key) => ({
           id: key,
-          ...recipesData[key]
+          ...data[key],
         }));
-        setRecipes(recipesArray);
+        setRecipes(array);
       } else {
         setRecipes([]);
       }
       setLoading(false);
     });
 
-    // Clean up subscription
     return () => unsubscribe();
   }, []);
 
@@ -47,41 +40,36 @@ const RecipeLibrary = () => {
             <li><Link to="/recipe-library">Recipe Library</Link></li>
           </ul>
         </nav>
-        <hr className="divider" />
       </header>
 
       <main className="main-content">
-        <h2 className="section-title">Recipe Library</h2>
+        <h2 className="community-recipes-title">Recipe Library</h2>
 
         {loading ? (
           <p>Loading recipes...</p>
         ) : (
-          <>
-            <section className="recipe-categories">
-              {recipes.map(recipe => (
-                <div key={recipe.id} className="recipe-card">
-                  <h3>{recipe.name || recipe.title}</h3>
-                  <p>{recipe.category || recipe.cuisineType}</p>
-                  {recipe.imageUrl && (
-                    <img 
-                      src={recipe.imageUrl} 
-                      alt={recipe.name || recipe.title} 
-                      className="recipe-image" 
-                    />
-                  )}
-                  <Link to={`/recipe/${recipe.id}`} className="view-recipe-btn">
-                    View Recipe
-                  </Link>
-                </div>
-              ))}
-            </section>
-
-            <hr className="divider" />
-          </>
+          <section className="recipe-categories">
+            {recipes.map((recipe) => (
+              <div key={recipe.id} className="recipe-card">
+                <h3>{recipe.name || recipe.title}</h3>
+                <p>{recipe.category || recipe.cuisineType}</p>
+                {recipe.imageUrl && (
+                  <img
+                    src={recipe.imageUrl}
+                    alt={recipe.name || recipe.title}
+                    className="recipe-image"
+                  />
+                )}
+                <Link to={`/recipe/${recipe.id}`} className="view-category-btn">
+                  View Recipe
+                </Link>
+              </div>
+            ))}
+          </section>
         )}
 
         <section className="subscribe-section">
-          <h2>KEEP EATING!</h2>
+          <h2 className="subscribe-heading">KEEP EATING!</h2>
           <div className="subscribe-box">
             <button className="subscribe-button">SUBSCRIBE</button>
             <input type="email" placeholder="Email address" className="email-input" />
