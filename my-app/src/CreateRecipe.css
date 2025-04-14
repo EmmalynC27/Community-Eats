@@ -233,7 +233,7 @@
   .submit-button-container {
     display: flex;
     justify-content: center;
-    width: 50%;
+    width: 100%;
   }
 
 /* Footer */
