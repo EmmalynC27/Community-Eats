@@ -148,6 +148,7 @@
   width: 300px; 
   height: auto;
   object-fit: cover;
+  border: 2px solid black;
   /* No 'flex: 1' here, so it won't push it to center */
 }
 
@@ -156,11 +157,31 @@
   /* max-width: 500px; */
 }
 
+.profile-info h2
+{
+  font-size: 40px;
+}
+
+.profile-info .about-me
+{
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 25px; 
+  font-weight: 700; 
+}
+
+.profile-info p
+{
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 300; 
+}
+
 
 .section-title {
   font-family: 'Instrument Sans', sans-serif; /* or whichever font */
   font-weight: 700;                          /* bold */
-  font-size: 26px;                           /* size as you like */
+  font-size: 30px;  
+  text-align: left;                         /* size as you like */
   margin-bottom: 20px; /* same spacing as your inline style was doing */
 }
 
@@ -175,6 +196,7 @@
 .recipe-slide-container {
   position: relative;
   width: 100%;
+  border: 2px solid black;
 }
 
 .recipe-slide-image {
@@ -185,31 +207,36 @@
 
 .recipe-slide-overlay {
   position: absolute;
-  bottom: 10px;       /* 10px from bottom */
+  bottom: 0;       /* 10px from bottom */
   left: 0;            
   right: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 15px;
+  
+  background-color: white;
+  border-top: 2px solid black; 
 }
 
-.recipe-overlay-left,
+.recipe-overlay-left
+{
+  display: flex;
+  align-items: center;
+  text-align: left;
+  font-size: 25px;
+  color: black;
+  font-family: 'Italiana', serif;
+  padding: 10px 20px;    
+}
 .recipe-overlay-right {
   display: flex;
   align-items: center;
+  text-align: right;
+  font-size: 18px;
+  font-family: 'Instrument Sans', serif;
+  padding: 10px 20px;
 }
 
 .recipe-overlay-text {
-  font-family: 'Instrument Sans', serif; 
-  font-weight: 700;              /* make it bold or semi-bold */
-  font-size: 24px;               /* bigger text */
-  color: #fff;                   /* white text */
-  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
-}
-
-.recipe-overlay-arrow {
-  font-size: 24px;
-  color: black; /* black arrows inside the image overlay */
-  margin: 0 8px;
+  padding: 10px;
 }
