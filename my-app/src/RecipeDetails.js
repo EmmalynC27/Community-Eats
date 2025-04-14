@@ -3,9 +3,19 @@ import { useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import { adminRecipes } from './AdminRecipes';
+import { useAuth } from './AuthContext'; // Make sure you have this context
 import './recipelibrarymenu.css'; // Keep your main CSS import so classes match
+import { BrowserRouter as Router, Route, Routes, Navigate, Link } from 'react-router-dom';
+import AboutUs from './AboutUs';
+import FilterMenu from './FilterMenu';
+import LoginPage from './LoginPage';
+import CreateRecipe from './CreateRecipe'; // Import the new CreateRecipe component
+import './fonts.css';
+import Profile from './Profile'; // Add this at the top with your other imports
+
 
 const RecipeDetails = () => {
+  const { currentUser } = useAuth();
   const { id } = useParams(); // e.g. /recipe/admin-burger-1
   const [recipe, setRecipe] = useState(null);
   const [isAdminRecipe, setIsAdminRecipe] = useState(false);
@@ -57,30 +67,44 @@ const RecipeDetails = () => {
         <button className="veg-option-btn">VEGETARIAN LIBRARY OPTION</button>
       </div>
 
-      {/* Header (same structure/classes as your other pages) */}
       <header className="header">
-        <h1>COMMUNITY EATS</h1>
-        <nav className="navigation">
-          <ul>
-            <li><a href="/recipes">Recipe Library</a></li>
-            <li><a href="/about">About Us</a></li>
-          </ul>
-        </nav>
-      </header>
-
-      <hr className="divider" />
+                  <div className="header-content">
+                    <h1>COMMUNITY EATS</h1>
+                    <nav className="navigation">
+                      <ul>
+                        <li><Link to="/home">Home</Link></li>
+                        <li><Link to="/create-recipe">Create Recipe</Link></li>
+                        <li><Link to="/about-us">About Us</Link></li>
+                        <li><Link to="/recipe-library">Recipe Library</Link></li>
+                        <li><Link to="/profile">Profile</Link></li>
+                      </ul>
+                    </nav>
+                    {currentUser && (
+                      <div className="user-info">
+                        <span className="user-name">
+                          {currentUser.displayName || currentUser.email.split('@')[0]}
+                        </span>
+                        <img 
+                          src={currentUser.photoURL || '/default-user.png'} 
+                          alt="User profile" 
+                          className="user-avatar"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </header>
 
       {/* Main content container */}
       <div className="main-content" style={{ display: 'block' }}>
         {/* A section for the recipe details */}
         <section 
           className="recipe-details-section" 
-          style={{ maxWidth: '700px', margin: 'auto' }}
+          style={{ maxWidth: '700px', margin: '0' }}
         >
           <h2 style={{ fontFamily: 'Italiana, serif', fontSize: '32px' }}>
             {recipe.name}
           </h2>
-          <p style={{ fontStyle: 'italic', marginBottom: '10px' }}>
+          <p style={{ fontFamily: 'Instrument Sans, sansSerif', fontStyle: 'italic', marginBottom: '10px' }}>
             By: {authorName}
           </p>
 
@@ -93,61 +117,69 @@ const RecipeDetails = () => {
                 width: '100%',
                 maxWidth: '400px',
                 borderRadius: '6px',
-                marginBottom: '20px'
+                marginBottom: '20px',
+                border: '2px solid black',
               }}
             />
           )}
 
           {/* Basic recipe info */}
-          <p><strong>Cuisine:</strong> {recipe.cuisineType || 'N/A'}</p>
-          <p><strong>Food Type:</strong> {recipe.foodType || 'N/A'}</p>
-          <p><strong>Diet:</strong> {recipe.diet || 'N/A'}</p>
+          <p style={{fontFamily: 'Instrument Sans, sansSerif', fontSize:'20px'}}><strong>Cuisine:</strong> {recipe.cuisineType || 'N/A'}</p>
+          <p style={{fontFamily: 'Instrument Sans, sansSerif', fontSize:'20px'}}><strong>Food Type:</strong> {recipe.foodType || 'N/A'}</p>
+          <p style={{fontFamily: 'Instrument Sans, sansSerif', fontSize:'20px'}}><strong>Diet:</strong> {recipe.diet || 'N/A'}</p>
 
           {/* Ingredients */}
-          <h3 style={{ marginTop: '30px' }}>Ingredients</h3>
-          <ul>
+          <h3 style={{fontFamily: 'Instrument Sans, sansSerif', fontSize:'30px', marginTop: '30px', borderBottom: '2px solid black'}}>Ingredients</h3>
+          <ul style={{fontSize:'18px', fontWeight: '700'}}>
             {recipe.ingredients?.map((ing, idx) => (
               <li key={idx}>{ing}</li>
             ))}
           </ul>
 
           {/* Steps */}
-          <h3 style={{ marginTop: '30px' }}>Instructions</h3>
-          <ol>
+          <h3 style={{fontFamily: 'Instrument Sans, sansSerif', fontSize:'30px', marginTop: '30px', borderBottom: '2px solid black' }}>Instructions</h3>
+          <ol style={{fontSize:'18px', fontWeight: '700'}}>
             {recipe.steps?.map((step, idx) => (
               <li key={idx}>{step}</li>
             ))}
           </ol>
 
           {/* A short "About" note */}
-          <h3 style={{ marginTop: '30px' }}>About This Recipe</h3>
+          <h3 style={{fontFamily: 'Instrument Sans, sansSerif', fontSize:'30px', marginTop: '30px', borderBottom: '2px solid black' }}>About This Recipe</h3>
           {isAdminRecipe ? (
-            <p>This is an official Community Eats Team recipe — enjoy!</p>
+            <p style={{fontSize:'18px', fontWeight: '700'}}>This is an official Community Eats Team recipe — enjoy!</p>
           ) : (
             <p>Thanks to our community for sharing this delicious dish!</p>
           )}
         </section>
       </div>
 
-      {/* Footer (same style as FilterMenu) */}
+      {/* Footer and Subscribe Section */}
       <footer className="footer">
-        <div className="subscribe-section">
-          <h3>KEEP EATING!</h3>
-          <input
-            type="email"
-            placeholder="Email address"
-            className="subscribe-input"
-          />
-        </div>
-        <div className="footer-details">
-          <p>© 2025, Community Eats</p>
-          <p>(810) 246 - 8357</p>
-          <p>1234 Michigan Avenue, Dearborn, MI 48124</p>
-        </div>
-        <div className="social-media">
-          <a href="/">Facebook</a> | <a href="/">Pinterest</a> | <a href="/">YouTube</a> | <a href="/">Instagram</a>
-        </div>
-      </footer>
+                    <div className="footer-content">
+                      <div className="footer-left">
+                        <section className="subscribe-section">
+                          <h2>KEEP EATING!</h2>
+                          <div className="subscribe-container">
+                            <button className="subscribe-button">
+                              SUBSCRIBE
+                            </button>
+                            <input 
+                              type="email" 
+                              placeholder="Email address" 
+                              className="email-input" 
+                            />
+                          </div>
+                        </section>
+                        
+                        <div className="footer-text">
+                          <p>© 2025, Community Eats</p>
+                          <p>(810) 246 - 8357</p>
+                          <p>1234 Michigan Avenue, Dearborn, MI 48124</p>
+                        </div>
+                      </div>
+                    </div>
+                  </footer>
     </div>
   );
 };
