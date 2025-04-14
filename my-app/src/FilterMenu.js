@@ -4,6 +4,12 @@ import { db } from './firebaseConfig';
 import { adminRecipes } from './AdminRecipes'; // Your hard-coded "team original" recipes
 import './recipelibrarymenu.css';
 import { Link } from 'react-router-dom'; // For linking to /recipe/:id
+import LoginPage from './LoginPage';
+import CreateRecipe from './CreateRecipe'; 
+import Profile from './Profile';
+import { useAuth } from './AuthContext'; // Make sure you have this context
+import './fonts.css';
+import RecipeDetails from './RecipeDetails';
 
 const FilterMenu = () => {
   // Recipes from Firestore
@@ -101,6 +107,8 @@ const FilterMenu = () => {
     setDiet(e.target.value);
   };
 
+  const { currentUser } = useAuth();
+
   return (
     <div className="page-container">
       {/* Top Bar */}
@@ -110,17 +118,31 @@ const FilterMenu = () => {
 
       {/* Header */}
       <header className="header">
-        <h1>COMMUNITY EATS</h1>
-        <nav className="navigation">
-          <ul>
-            <li><Link to="/home">Home</Link></li>
-            <li><a href="/recipes">Recipe Library</a></li>
-            <li><a href="/about">About Us</a></li>
-          </ul>
-        </nav>
-      </header>
-
-      <hr className="divider" />
+                  <div className="header-content">
+                    <h1>COMMUNITY EATS</h1>
+                    <nav className="navigation">
+                      <ul>
+                        <li><Link to="/home">Home</Link></li>
+                        <li><Link to="/create-recipe">Create Recipe</Link></li>
+                        <li><Link to="/about-us">About Us</Link></li>
+                        <li><Link to="/recipe-library">Recipe Library</Link></li>
+                        <li><Link to="/profile">Profile</Link></li>
+                      </ul>
+                    </nav>
+                    {currentUser && (
+                      <div className="user-info">
+                        <span className="user-name">
+                          {currentUser.displayName || currentUser.email.split('@')[0]}
+                        </span>
+                        <img 
+                          src={currentUser.photoURL || '/default-user.png'} 
+                          alt="User profile" 
+                          className="user-avatar"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </header>
 
       <div className="main-content">
         {/* Sidebar with Filters */}
@@ -128,7 +150,7 @@ const FilterMenu = () => {
           <h2>Filter</h2>
           {/* Diet Filter */}
           <div className="diet-filter">
-            <p><strong>Diet:</strong></p>
+            <h3>Diet:</h3>
             <label className="diet-radio-option">
               <input
                 type="radio"
@@ -263,27 +285,36 @@ const FilterMenu = () => {
           </div>
         </section>
       </div>
+    
 
-      {/* Footer */}
+      {/* Footer and Subscribe Section */}
       <footer className="footer">
-        <div className="subscribe-section">
-          <h3>KEEP EATING!</h3>
-          <input
-            type="email"
-            placeholder="Email address"
-            className="subscribe-input"
-          />
+      <div className="footer-content">
+        <div className="footer-left">
+          <section className="subscribe-section">
+            <h2>KEEP EATING!</h2>
+            <div className="subscribe-container">
+              <button className="subscribe-button">
+                Subscribe
+              </button>
+              <input 
+                type="email" 
+                placeholder="Email address" 
+                className="email-input" 
+              />
+            </div>
+          </section>
+          
+          <div className="footer-text">
+            <p>© 2025, Community Eats</p>
+            <p>(810) 246 - 8357</p>
+            <p>1234 Michigan Avenue, Dearborn, MI 48124</p>
+          </div>
         </div>
-        <div className="footer-details">
-          <p>© 2025, Community Eats</p>
-          <p>(810) 246 - 8357</p>
-          <p>1234 Michigan Avenue, Dearborn, MI 48124</p>
-        </div>
-        <div className="social-media">
-          <a href="/">Facebook</a> | <a href="/">Pinterest</a> | <a href="/">YouTube</a> | <a href="/">Instagram</a>
-        </div>
+      </div>
       </footer>
-    </div>
+      </div>
+
   );
 };
 
