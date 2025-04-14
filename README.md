@@ -3,7 +3,7 @@ CIS 376 Final Project
 
 The project runs on React and is hosted on Firebase.
 
--How to run it:-
+How to run it:
 
 • Download the zip file or copy the GitHub link
 • Open Visual Studio Code
