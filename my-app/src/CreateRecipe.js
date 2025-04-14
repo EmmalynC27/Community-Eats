@@ -3,6 +3,7 @@ import { db } from './firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
 import './CreateRecipe.css'; 
 import { BrowserRouter as Router, Route, Routes, Navigate, Link } from 'react-router-dom';
+import { ref, push, set } from 'firebase/database';
 import AboutUs from './AboutUs';
 import FilterMenu from './FilterMenu';
 import LoginPage from './LoginPage';
@@ -43,22 +44,35 @@ const CreateRecipe = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!currentUser) {
+      alert('You must be logged in to create a recipe!');
+      return;
+    }
+  
     if (!recipeName.trim()) {
       alert('Recipe name is required!');
       return;
     }
-
+  
     try {
-      await addDoc(collection(db, 'recipes'), {
+      // Create a reference to a new location in your database
+      const recipesRef = ref(db, 'recipes');
+      const newRecipeRef = push(recipesRef);
+      
+      // Set the data at the new location
+      await set(newRecipeRef, {
         name: recipeName,
         imageUrl: imageUrl || '',
-        ingredients: ingredients.filter((ing) => ing.trim() !== ''),
-        steps: steps.filter((st) => st.trim() !== ''),
+        ingredients: ingredients.filter(ing => ing.trim() !== ''),
+        steps: steps.filter(st => st.trim() !== ''),
         cuisineType: cuisineType || 'Unspecified',
         foodType: foodType || 'Unspecified',
         diet: diet,
+        createdBy: currentUser.uid,  // Store who created this recipe
+        createdAt: new Date().toISOString()  // Add timestamp
       });
-
+  
       // Reset form
       setRecipeName('');
       setImageUrl('');
@@ -67,10 +81,11 @@ const CreateRecipe = () => {
       setCuisineType('');
       setFoodType('');
       setDiet('omnivore');
+      
       alert('Recipe created successfully!');
     } catch (error) {
       console.error('Error creating recipe:', error);
-      alert('Failed to create recipe. See console for details.');
+      alert(`Failed to create recipe: ${error.message}`);
     }
   };
 

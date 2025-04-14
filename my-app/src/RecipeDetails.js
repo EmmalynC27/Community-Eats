@@ -3,15 +3,17 @@ import { useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from './firebaseConfig';
 import { adminRecipes } from './AdminRecipes';
-import { useAuth } from './AuthContext'; // Make sure you have this context
-import './recipelibrarymenu.css'; // Keep your main CSS import so classes match
+import { useAuth } from './AuthContext'; 
+import './recipelibrarymenu.css'; 
 import { BrowserRouter as Router, Route, Routes, Navigate, Link } from 'react-router-dom';
+import { getDatabase, ref, get } from 'firebase/database';
+import { app } from './firebaseConfig';
 import AboutUs from './AboutUs';
 import FilterMenu from './FilterMenu';
 import LoginPage from './LoginPage';
-import CreateRecipe from './CreateRecipe'; // Import the new CreateRecipe component
+import CreateRecipe from './CreateRecipe'; 
 import './fonts.css';
-import Profile from './Profile'; // Add this at the top with your other imports
+import Profile from './Profile'; 
 
 
 const RecipeDetails = () => {
@@ -20,6 +22,13 @@ const RecipeDetails = () => {
   const [recipe, setRecipe] = useState(null);
   const [isAdminRecipe, setIsAdminRecipe] = useState(false);
   const [loading, setLoading] = useState(true);
+  const database = getDatabase(app);
+  const recipeRef = ref(database, `recipes/${id}`);
+    get(recipeRef).then((snapshot) => {
+    if (snapshot.exists()) {
+    setRecipe({ id: snapshot.key, ...snapshot.val() });
+  }
+});
 
   useEffect(() => {
     // Check if this ID is in the adminRecipes

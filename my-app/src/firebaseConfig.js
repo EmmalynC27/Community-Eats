@@ -2,9 +2,8 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";  // For Firestore
 import { getStorage } from "firebase/storage";
+import { getDatabase } from 'firebase/database';
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-// Optionally, if you still need Realtime Database:
-// import { getDatabase } from "firebase/database";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -22,9 +21,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
-// For Firestore:
-const db = getFirestore(app); 
 // If you still need Realtime Database separately, you could do:
-// const rtdb = getDatabase(app);
+const db = getDatabase(app);
 
 export { app, auth, googleProvider, db, signInWithPopup };
