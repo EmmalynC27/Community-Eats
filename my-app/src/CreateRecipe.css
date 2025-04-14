@@ -246,7 +246,7 @@
   
   .footer-left {
     width: 100%;
-    padding-right: -20%;
+    padding-left: 40px;
   }
   
   .footer-text {
@@ -263,9 +263,9 @@
   
   .footer-content {
     display: flex;
-    justify-content: space-between;
-    max-width: 1200px;
-    position: relative;
+    justify-content: flex-start;
+    padding-left: 20px;   
+    padding-right: 20px;
   }
   
   /* Subscribe Section */
