@@ -4,12 +4,35 @@ import AboutUs from './AboutUs';
 import './index.css';
 import FilterMenu from './FilterMenu';
 import LoginPage from './LoginPage';
-import CreateRecipe from './CreateRecipe'; 
+import CreateRecipe from './CreateRecipe'; // Import the new CreateRecipe component
 import { useAuth } from './AuthContext'; 
 import './fonts.css';
 import styles from './styles.css';
-import Profile from './Profile'; 
-import RecipeDetails from './RecipeDetails'; 
+import Profile from './Profile'; // Add this at the top with your other imports
+import RecipeDetails from './RecipeDetails'; // You will create this component
+import Slider from 'react-slick';
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+
+
+const carouselImages = [
+  '/images/cara_img1.jpg',
+  '/images/cara_img2.jpg',
+  '/images/cara_img3.jpg',
+  '/images/cara_img4.jpg'
+];
+
+const carouselSettings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  autoplay: true,
+  autoplaySpeed: 3000,
+  arrows: true,
+  pauseOnHover: true
+};
 
 const CommunityEats = () => {
   const { currentUser } = useAuth();
@@ -25,6 +48,7 @@ const CommunityEats = () => {
           <Route path="/home" element={
             currentUser ? (
               <>
+             
                 <header className="header">
                   <div className="header-content">
                     <h1>COMMUNITY EATS</h1>
@@ -50,81 +74,92 @@ const CommunityEats = () => {
                       </div>
                     )}
                   </div>
-                  <hr className="divider" />
                 </header>
 
+                {/* Carousel Section */}
+                <section className="carousel-section">
+                  <Slider {...carouselSettings}>
+                    {carouselImages.map((image, index) => (
+                      <div key={index}>
+                        <div className="carousel-slide">
+                          <img 
+                            src={image} 
+                            alt={`Featured ${index + 1}`}
+                            className="carousel-image"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </Slider>
+                </section>
+                
+                {/* Main Content Section */}
                 <main className="main-content">
                   <section className="welcome-section">
                     <p>
-                      Welcome to Community Eats - a space where food lovers come together to share, 
-                      recreate, and reinvent their favorite recipes! As a member, you can upload your 
-                      own culinary creations, discover new dishes, and get inspired by others in our 
-                      vibrant food community. Whether you're an experienced cook or a beginner, everyone’s 
-                      welcome to join in the fun and explore a world of flavors. Let's cook, share, and eat!
+                    Welcome to Community Eats - a space where food lovers come together to share, 
+                    recreate, and reinvent their favorite recipes! As a member, you can upload your 
+                    own culinary creations, discover new dishes, and get inspired by others in our 
+                    vibrant food community. Whether you're an experienced cook or a beginner, everyone’s 
+                    welcome to join in the fun and explore a world of flavors. Let's cook, share, and eat!
                     </p>
                   </section>
-                  <hr className="divider" />
-                  <section className="subscribe-section">
-                    <h2>KEEP EATING!</h2>
-                    <table className="subscribe-table">
-                      <tbody>
-                        <tr>
-                          <td>SUBSCRIBE</td>
-                          <td>
-                            <input type="email" placeholder="Email address" className="email-input" />
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </section>
                 </main>
-
-                <footer className="footer">
-                  <p>© 2025, Community Eats</p>
-                  <p>(810) 246 - 8357</p>
-                  <p>1234 Michigan Avenue, Dearborn, MI 48124</p>
-                </footer>
+                    
+                {/* Footer and Subscribe Section */}
+                  <footer className="footer">
+                    <div className="footer-content">
+                      <div className="footer-left">
+                        <section className="subscribe-section">
+                          <h2>KEEP EATING!</h2>
+                          <div className="subscribe-container">
+                            <button className="subscribe-button">
+                            SUBSCRIBE
+                            </button>
+                            <input 
+                              type="email" 
+                              placeholder="Email address" 
+                              className="email-input" 
+                            />
+                          </div>
+                        </section>
+                        
+                        <div className="footer-text">
+                          <p>© 2025, Community Eats</p>
+                          <p>(810) 246 - 8357</p>
+                          <p>1234 Michigan Avenue, Dearborn, MI 48124</p>
+                        </div>
+                      </div>
+                    </div>
+                  </footer>
               </>
             ) : (
               <Navigate to="/login" replace />
             )
           } />
 
-          {/* Create Recipe route (protected) */}
+          {/* Add the new Create Recipe route */}
           <Route 
             path="/create-recipe" 
             element={currentUser ? <CreateRecipe /> : <Navigate to="/login" replace />} 
           />
           
-          {/* About Us route (protected) */}
-          <Route 
-            path="/about-us" 
-            element={currentUser ? <AboutUs /> : <Navigate to="/login" replace />} 
-          />
+          <Route path="/about-us" element={currentUser ? <AboutUs /> : <Navigate to="/login" replace />} />
+          <Route path="/recipe-library" element={currentUser ? <FilterMenu /> : <Navigate to="/login" replace />} />
 
-          {/* Recipe Library route (protected) */}
-          <Route 
-            path="/recipe-library" 
-            element={currentUser ? <FilterMenu /> : <Navigate to="/login" replace />} 
-          />
-
-          {/* Single Recipe Details Page (protected) */}
+          {/* NEW: Single Recipe Details Page (protected) */}
           <Route 
             path="/recipe/:id" 
             element={currentUser ? <RecipeDetails /> : <Navigate to="/login" replace />} 
           />
-
-          {/* Profile route (protected) */}
-          <Route 
-            path="/profile" 
-            element={currentUser ? <Profile /> : <Navigate to="/login" replace />}
-          />
-
+          
           {/* Redirect root path to login */}
           <Route path="/" element={<Navigate to="/login" replace />} />
           
           {/* Redirect any other path to login */}
           <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="/profile" element={currentUser ? <Profile /> : <Navigate to="/login" replace />} />
+
         </Routes>
       </div>
     </Router>
