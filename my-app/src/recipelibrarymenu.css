@@ -13,16 +13,21 @@
 }
 
 .filter-sidebar h2 {
-  font-family: 'Italiana', serif;
+  font-family: 'Instrument Sans', sans-serif;
   font-size: 24px;
   margin-bottom: 10px;
 }
-
+h3
+{
+  font-family: 'Instrument Sans', sans-serif;
+}
 /* Filter list styles */
 .filter-list {
   list-style-type: none;
   padding-left: 0;
   margin-bottom: 20px;
+  font-family: 'Instrument Sans', sans-serif;
+  border-bottom: 2px solid #000;
 }
 
 .filter-list li {
@@ -36,6 +41,8 @@
 /* Diet filter (vertical layout) */
 .diet-filter {
   margin-bottom: 15px;
+  font-family: 'Instrument Sans', sans-serif;
+  border-bottom: 2px solid #000;
 }
 .diet-radio-option {
   display: block;  /* Each option on its own line */
@@ -50,8 +57,9 @@
 
 .section-title {
   font-family: 'Italiana', serif;
-  font-size: 28px;
+  font-size: 35px;
   margin-bottom: 20px;
+  font-weight: 700;
   border-bottom: 2px solid #000;
   display: inline-block;
   padding-bottom: 5px;
@@ -70,7 +78,7 @@
 /* Recipe Card Styles */
 .recipe-card {
   width: 250px;
-  border: 1px solid #ddd;
+  border: 2px solid black;
   border-radius: 6px;
   padding: 15px;
   background-color: #fff;
@@ -94,12 +102,25 @@
 .recipe-name {
   font-size: 18px;
   margin: 0 0 5px;
+  font-weight: 700;
   font-family: 'Italiana', serif;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #000;
 }
 
 .recipe-category {
   font-size: 14px;
-  color: #666;
+  color: #000000;
+  font-family: 'Instrument Sans', sans-serif;
+}
+
+p
+{
+  font-size: 18px;
+  margin: 0 0 5px;
+  font-family: 'Italiana', serif;
+  padding: 10px;
+  font-weight: 700;
 }
 
 /* Top Bar Styles */
@@ -162,37 +183,97 @@
   margin: 0.5rem 0 20px 0;
 }
 
-/* Footer Styles */
+/* Footer */
 .footer {
-  background: #f7f7f7;
-  border-top: 1px solid #ddd;
-  padding: 20px 40px;
+  width: 100%;
+  background-color: #fff;
+  border-top: 5px solid #000;
+  text-align: left; /* Ensure all text aligns left */
+}
+
+.footer-left {
+  width: 100%;
+ 
+}
+
+.footer-text {
+  margin-top: 30px; /* Space between subscribe and text */
+}
+
+.footer-text p {
+  margin: 8px 0;
+  font-family: 'Instrument Sans', sans-serif;
+  color: #000;
+  line-height: 1.5;
+}
+
+/* Adjust footer content layout */
+.footer-content {
   display: flex;
-  flex-wrap: wrap;
-  gap: 40px;
-  align-items: center;
   justify-content: space-between;
+  max-width: 1200px;
+  
+  position: relative;
 }
 
-.subscribe-section h3 {
-  font-family: 'Italiana', serif;
-  font-size: 24px;
-  margin-bottom: 10px;
+
+
+/* Subscribe Section */
+.subscribe-section {
+  text-align: Left;
+  
+  border-top: none;
+  margin-bottom: 30px; /* Space between subscribe and text */ 
 }
 
-.subscribe-input {
-  padding: 8px;
-  width: 200px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+.subscribe-section h2 {
+  font-family: 'Instrument Sans', sans-serif;
+  color:#000;
+  font-size: 28px;
+  font-weight: 700;
+  text-align: left;
+  margin-bottom: 15px;
 }
 
-.footer-details p {
-  margin: 5px 0;
+.subscribe-container {
+  justify-content: flex-start;
+  width: 100%;
+  display: flex;
+  max-width: 500px;
+}
+.subscribe-container > * {
+  margin: 0;
+}
+.email-input {
+  padding: 12px 20px;
+  border: 1px solid #ddd;
+  border-radius: 0 4px 4px 0; /* Rounded right corners only */
+  border-left: none; /* Remove left border to eliminate double border */
+  font-size: 20px;
+  flex-grow: 1; /* Takes remaining space */
+  font-family: 'Instrument Sans', sans-serif;
+  outline: none;
+  color:#000;
 }
 
-.social-media a {
-  margin-right: 10px;
-  text-decoration: none;
-  color: #333;
+.email-input:focus {
+  outline: none;
+  border-color: #000;
+}
+
+.subscribe-button {
+  padding: 12px 30px;
+  font-family: 'Instrument Sans', sans-serif;
+  background-color: #000;
+  color: white;
+  border: none;
+  border-radius: 4px 0 0 4px; /* Rounded left corners only */
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.subscribe-button:hover {
+  background-color: #333;
 }
