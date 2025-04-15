@@ -9,6 +9,7 @@ The project runs on React and is hosted on Firebase.
 - Open a new terminal in Visual Studio Code
 - Enter these following commands:
   - cd my-app
+  - npm install
   - npm install firebase
   - npm install slick-carousel react-slick
   - npm start
