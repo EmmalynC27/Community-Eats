@@ -1,25 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from './firebaseConfig';
-import { adminRecipes } from './AdminRecipes'; // Your hard-coded "team original" recipes
+import { getDatabase, ref, onValue } from 'firebase/database';
+import { app } from './firebaseConfig';
 import './recipelibrarymenu.css';
 import { Link } from 'react-router-dom'; // For linking to /recipe/:id
-import LoginPage from './LoginPage';
-import CreateRecipe from './CreateRecipe'; 
-import Profile from './Profile';
-import { useAuth } from './AuthContext'; // Make sure you have this context
+import { useAuth } from './AuthContext';
 import './fonts.css';
-import RecipeDetails from './RecipeDetails';
+
+// We assume you have a RecipeDetails, CreateRecipe, etc. but we only need them if used here
 
 const FilterMenu = () => {
-  // Recipes from Firestore
+  // All recipes pulled from Realtime Database
   const [recipes, setRecipes] = useState([]);
-  // Filtered Firestore recipes
+  // Filtered recipes
   const [filteredRecipes, setFilteredRecipes] = useState([]);
-  // NEW: Filtered admin recipes
-  const [filteredAdminRecipes, setFilteredAdminRecipes] = useState([]);
 
-  // Cuisine filter checkboxes state
+  // Cuisine filter checkboxes
   const [cuisineFilter, setCuisineFilter] = useState({
     American: false,
     Asian: false,
@@ -28,7 +23,7 @@ const FilterMenu = () => {
     Mexican: false
   });
 
-  // Food type filter checkboxes state
+  // Food type filter checkboxes
   const [foodTypeFilter, setFoodTypeFilter] = useState({
     Burgers: false,
     Pastas: false,
@@ -37,31 +32,51 @@ const FilterMenu = () => {
     Tacos: false
   });
 
-  // Diet filter radio: "all", "omnivore", or "herbivore"
+  // Diet radio: "all", "omnivore", "herbivore"
   const [diet, setDiet] = useState('all');
 
-  // 1) On mount, fetch only the Firestore recipes
+  // NEW: Add a searchTerm for filtering by recipe name
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Fetch recipes from Realtime Database on mount
   useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        const snapshot = await getDocs(collection(db, 'recipes'));
-        const dbRecipes = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setRecipes(dbRecipes);
-        setFilteredRecipes(dbRecipes);
-        console.log('Fetched Firestore recipes:', dbRecipes);
-      } catch (error) {
-        console.error('Error fetching recipes from Firestore:', error);
+    const database = getDatabase(app);
+    const recipesRef = ref(database, 'recipes');
+
+    const unsubscribe = onValue(recipesRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const array = Object.keys(data).map((key) => ({
+          id: key,
+          ...data[key],
+        }));
+        setRecipes(array);
+        setFilteredRecipes(array);
+        console.log('Fetched Realtime DB recipes:', array);
+      } else {
+        setRecipes([]);
+        setFilteredRecipes([]);
       }
-    };
-    fetchRecipes();
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  // Helper to check if a given recipe matches the current filters
+  // Helper that returns true if recipe meets all active filters
   const passesFilters = (recipe) => {
-    // Diet filter
+    // 1) Search by name
+    if (searchTerm.trim()) {
+      const lowerName = recipe.name?.toLowerCase() || '';
+      const lowerSearch = searchTerm.toLowerCase();
+      if (!lowerName.includes(lowerSearch)) {
+        return false;
+      }
+    }
+
+    // 2) Diet filter
     if (diet !== 'all' && recipe.diet !== diet) return false;
 
-    // Cuisine filter
+    // 3) Cuisine filter
     const activeCuisines = Object.keys(cuisineFilter).filter(key => cuisineFilter[key]);
     if (activeCuisines.length > 0) {
       if (!recipe.cuisineType || !activeCuisines.includes(recipe.cuisineType)) {
@@ -69,7 +84,7 @@ const FilterMenu = () => {
       }
     }
 
-    // Food type filter
+    // 4) Food type filter
     const activeFoodTypes = Object.keys(foodTypeFilter).filter(key => foodTypeFilter[key]);
     if (activeFoodTypes.length > 0) {
       if (!recipe.foodType || !activeFoodTypes.includes(recipe.foodType)) {
@@ -80,17 +95,11 @@ const FilterMenu = () => {
     return true;
   };
 
-  // 2) Update filtered Firestore recipes AND admin recipes when filters change
+  // Re-run filtering whenever recipes or filter states change
   useEffect(() => {
-    // Filter Firestore recipes
-    const newFiltered = recipes.filter((r) => passesFilters(r));
+    const newFiltered = recipes.filter(r => passesFilters(r));
     setFilteredRecipes(newFiltered);
-
-    // Filter the admin/hard-coded recipes as well
-    const newAdminFiltered = adminRecipes.filter((r) => passesFilters(r));
-    setFilteredAdminRecipes(newAdminFiltered);
-
-  }, [diet, cuisineFilter, foodTypeFilter, recipes]);
+  }, [recipes, searchTerm, diet, cuisineFilter, foodTypeFilter]);
 
   // Handlers for filter changes
   const handleCuisineChange = (e) => {
@@ -107,6 +116,10 @@ const FilterMenu = () => {
     setDiet(e.target.value);
   };
 
+  const handleSearchTermChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
   const { currentUser } = useAuth();
 
   return (
@@ -118,36 +131,48 @@ const FilterMenu = () => {
 
       {/* Header */}
       <header className="header">
-                  <div className="header-content">
-                    <h1>COMMUNITY EATS</h1>
-                    <nav className="navigation">
-                      <ul>
-                        <li><Link to="/home">Home</Link></li>
-                        <li><Link to="/create-recipe">Create Recipe</Link></li>
-                        <li><Link to="/about-us">About Us</Link></li>
-                        <li><Link to="/recipe-library">Recipe Library</Link></li>
-                        <li><Link to="/profile">Profile</Link></li>
-                      </ul>
-                    </nav>
-                    {currentUser && (
-                      <div className="user-info">
-                        <span className="user-name">
-                          {currentUser.displayName || currentUser.email.split('@')[0]}
-                        </span>
-                        <img 
-                          src={currentUser.photoURL || '/default-user.png'} 
-                          alt="User profile" 
-                          className="user-avatar"
-                        />
-                      </div>
-                    )}
-                  </div>
-                </header>
+        <div className="header-content">
+          <h1>COMMUNITY EATS</h1>
+          <nav className="navigation">
+            <ul>
+              <li><Link to="/home">Home</Link></li>
+              <li><Link to="/create-recipe">Create Recipe</Link></li>
+              <li><Link to="/about-us">About Us</Link></li>
+              <li><Link to="/recipe-library">Recipe Library</Link></li>
+              <li><Link to="/profile">Profile</Link></li>
+            </ul>
+          </nav>
+          {currentUser && (
+            <div className="user-info">
+              <span className="user-name">
+                {currentUser.displayName || currentUser.email.split('@')[0]}
+              </span>
+              <img
+                src={currentUser.photoURL || '/default-user.png'}
+                alt="User profile"
+                className="user-avatar"
+              />
+            </div>
+          )}
+        </div>
+      </header>
 
       <div className="main-content">
         {/* Sidebar with Filters */}
         <aside className="filter-sidebar">
           <h2>Filter</h2>
+
+          {/* Search by Name */}
+          <div className="search-box">
+            <label><strong>Search:</strong></label>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={handleSearchTermChange}
+              placeholder="Search recipes by name"
+            />
+          </div>
+
           {/* Diet Filter */}
           <div className="diet-filter">
             <h3>Diet:</h3>
@@ -222,40 +247,7 @@ const FilterMenu = () => {
 
         {/* Recipe Section */}
         <section className="recipe-section">
-          <h2 className="section-title">Recipes</h2>
-
-          {/* Filtered admin recipes */}
-          <h3>Community Eats Team Original</h3>
-          <div className="recipe-grid">
-            {filteredAdminRecipes.length > 0 ? (
-              filteredAdminRecipes.map(admin => (
-                <Link
-                  key={admin.id}
-                  to={`/recipe/${admin.id}`}
-                  style={{ textDecoration: 'none', color: 'inherit' }}
-                >
-                  <div className="recipe-card">
-                    {admin.imageUrl && (
-                      <img
-                        src={admin.imageUrl}
-                        alt={admin.name}
-                        className="recipe-image"
-                      />
-                    )}
-                    <h3 className="recipe-name">{admin.name}</h3>
-                    <p className="recipe-category">
-                      {admin.cuisineType} | {admin.foodType} | {admin.diet}
-                    </p>
-                  </div>
-                </Link>
-              ))
-            ) : (
-              <p>No recipes found</p>
-            )}
-          </div>
-
-          {/* Filtered community recipes from Firestore */}
-          <h3>Community Recipes</h3>
+          <h2 className="section-title">Community Recipes</h2>
           <div className="recipe-grid">
             {filteredRecipes.length > 0 ? (
               filteredRecipes.map(recipe => (
@@ -286,35 +278,33 @@ const FilterMenu = () => {
         </section>
       </div>
     
-
       {/* Footer and Subscribe Section */}
       <footer className="footer">
-      <div className="footer-content">
-        <div className="footer-left">
-          <section className="subscribe-section">
-            <h2>KEEP EATING!</h2>
-            <div className="subscribe-container">
-              <button className="subscribe-button">
-                Subscribe
-              </button>
-              <input 
-                type="email" 
-                placeholder="Email address" 
-                className="email-input" 
-              />
+        <div className="footer-content">
+          <div className="footer-left">
+            <section className="subscribe-section">
+              <h2>KEEP EATING!</h2>
+              <div className="subscribe-container">
+                <button className="subscribe-button">
+                  Subscribe
+                </button>
+                <input 
+                  type="email" 
+                  placeholder="Email address" 
+                  className="email-input" 
+                />
+              </div>
+            </section>
+            
+            <div className="footer-text">
+              <p>© 2025, Community Eats</p>
+              <p>(810) 246 - 8357</p>
+              <p>1234 Michigan Avenue, Dearborn, MI 48124</p>
             </div>
-          </section>
-          
-          <div className="footer-text">
-            <p>© 2025, Community Eats</p>
-            <p>(810) 246 - 8357</p>
-            <p>1234 Michigan Avenue, Dearborn, MI 48124</p>
           </div>
         </div>
-      </div>
       </footer>
-      </div>
-
+    </div>
   );
 };
 
