@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 import { getDatabase, ref, onValue } from 'firebase/database';
 import { app } from './firebaseConfig';
 import './StyleRecipeLibrary.css';        // Your original styling
@@ -8,6 +9,7 @@ import './recipelibrarymenu.css';         // CSS for the sidebar & filtering
 
 const RecipeLibrary = () => {
   // Full list of recipes from the Realtime Database
+  const { currentUser } = useAuth();
   const [recipes, setRecipes] = useState([]);
   // List of recipes after filtering
   const [filteredRecipes, setFilteredRecipes] = useState([]);
@@ -114,15 +116,31 @@ const RecipeLibrary = () => {
     <div className="recipe-library">
       {/* Header */}
       <header className="header">
-        <h1>COMMUNITY EATS</h1>
-        <nav className="navigation">
-          <ul>
-            <li><Link to="/home">Home</Link></li>
-            <li><Link to="/about-us">About Us</Link></li>
-            <li><Link to="/recipe-library">Recipe Library</Link></li>
-          </ul>
-        </nav>
-      </header>
+                  <div className="header-content">
+                    <h1>COMMUNITY EATS</h1>
+                    <nav className="navigation">
+                      <ul>
+                        <li><Link to="/home">Home</Link></li>
+                        <li><Link to="/create-recipe">Create Recipe</Link></li>
+                        <li><Link to="/about-us">About Us</Link></li>
+                        <li><Link to="/recipe-library">Recipe Library</Link></li>
+                        <li><Link to="/profile">Profile</Link></li>
+                      </ul>
+                    </nav>
+                    {currentUser && (
+                      <div className="user-info">
+                        <span className="user-name">
+                          {currentUser.displayName || currentUser.email.split('@')[0]}
+                        </span>
+                        <img 
+                          src={currentUser.photoURL || '/default-user.png'} 
+                          alt="User profile" 
+                          className="user-avatar"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </header>
 
       {/* Main content: Flex container with sidebar (filter) and recipe section */}
       <main className="main-content">
@@ -130,7 +148,7 @@ const RecipeLibrary = () => {
         <aside className="filter-sidebar">
           <h2>Filter</h2>
           {/* Search Box */}
-          <div className="search-box">
+          <div style={{fontFamily: "'Instrument Sans', sans-serif"}}className="search-box">
             <label><strong>Search:</strong></label>
             <input
               type="text"
@@ -223,14 +241,35 @@ const RecipeLibrary = () => {
                     <p>{recipe.category || recipe.cuisineType}</p>
                     {recipe.imageUrl && (
                       <img
-                        src={recipe.imageUrl}
-                        alt={recipe.name || recipe.title}
-                        className="recipe-image"
-                      />
+                      src={recipe.imageUrl}
+                      alt={recipe.name || recipe.title}
+                      className="recipe-image"
+                      style={{
+                        width: "100%",
+                        height: "200px", 
+                        objectFit: "cover",
+                        borderRadius: "4px",
+                        marginBottom: "8px",
+                        border: "2px solid black",
+                      }}
+                    />
                     )}
-                    <Link to={`/recipe/${recipe.id}`} className="view-category-btn">
-                      View Recipe
-                    </Link>
+                  <Link 
+                    to={`/recipe/${recipe.id}`} 
+                    className="view-category-btn"
+                    style={{
+                      backgroundColor: 'black', 
+                      color: 'white',
+                      padding: '8px 16px',
+                      borderRadius: '4px', 
+                      textDecoration: 'none', 
+                      display: 'inline-block', 
+                      marginTop: '10px',
+                      fontFamily: "'Instrument Sans', sans-serif" 
+                    }}
+                  >
+                    View Recipe
+                  </Link>
                   </div>
                 ))
               ) : (
@@ -241,23 +280,35 @@ const RecipeLibrary = () => {
         </section>
       </main>
 
-      {/* Subscribe Section */}
-      <section className="subscribe-section">
-        <h2 className="subscribe-heading">KEEP EATING!</h2>
-        <div className="subscribe-box">
-          <button className="subscribe-button">SUBSCRIBE</button>
-          <input type="email" placeholder="Email address" className="email-input" />
-        </div>
-      </section>
-
-      {/* Footer */}
+      {/* Footer and Subscribe Section */}
       <footer className="footer">
-        <p>© 2025, Community Eats</p>
-        <p>(810) 246 - 8357</p>
-        <p>1234 Michigan Avenue, Dearborn, MI 48124</p>
-      </footer>
+                  <div className="footer-content">
+                    <div className="footer-left">
+                      <section className="subscribe-section">
+                        <h2>KEEP EATING!</h2>
+                        <div className="subscribe-container">
+                          <button className="subscribe-button">
+                            SUBSCRIBE
+                          </button>
+                          <input 
+                            type="email" 
+                            placeholder="Email address" 
+                            className="email-input" 
+                          />
+                        </div>
+                      </section>
+                      
+                      <div className="footer-text">
+                        <p>© 2025, Community Eats</p>
+                        <p>(810) 246 - 8357</p>
+                        <p>1234 Michigan Avenue, Dearborn, MI 48124</p>
+                      </div>
+                    </div>
+                  </div>
+                </footer>
     </div>
   );
 };
 
 export default RecipeLibrary;
+
